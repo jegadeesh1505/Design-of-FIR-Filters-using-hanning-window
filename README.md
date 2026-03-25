@@ -13,7 +13,7 @@
 
 # PROGRAM 
 # LPF
-```
+```py
 clc;
 clear;
 close;
@@ -50,7 +50,7 @@ title("Magnitude Response in dB")
 
 ```
 # HPF
-```
+```py
 clc;
 clear;
 close;
@@ -85,7 +85,7 @@ title("HPF Magnitude in dB")
 
 ```
 # BPF
-```
+```py
 clc;
 clear;
 close;
@@ -121,7 +121,7 @@ title("BPF Magnitude in dB")
 
 ```
 # BSF
-```
+```py
 
 clc;
 clear;
