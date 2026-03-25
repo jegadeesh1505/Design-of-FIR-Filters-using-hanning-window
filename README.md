@@ -1,7 +1,7 @@
 
 # Design-of-FIR-Filters-using-hanning-window
 
- DESIGN OF FIR DIGITAL FILTER 
+#DESIGN OF FIR DIGITAL FILTER 
 
 # AIM: 
           
@@ -12,49 +12,168 @@
   PC Installed with SCILAB 
 
 # PROGRAM 
-```python
+# LPF
+```
 clc;
 clear;
 close;
 
-// Filter specifications
-N = 51;                      // Filter order (number of coefficients)
-fc = 0.3;                    // Normalized cutoff frequency (fc = wc/pi)
-n = 0:N-1;
+N = input("Enter filter length (odd) = ");
+Wc = input("Enter cutoff frequency (0 to %pi) = ");
+
 alpha = (N-1)/2;
 
-// Ideal Low Pass Filter Impulse Response
-hd = sin(2*%pi*fc*(n - alpha)) ./ (n - alpha);
-hd(alpha+1) = 2*%pi*fc;      // Handle division by zero at center
+for n = 0:N-1
 
-// Hanning (Hann) Window
-w = 0.5 - 0.5*cos(2*%pi*n/(N-1));
+    if n == alpha then
+        hd(n+1) = Wc/%pi;
+    else
+        hd(n+1) = sin(Wc*(n-alpha))/(%pi*(n-alpha));
+    end
 
-// Apply window to ideal response
-h = hd .* w;
+    // Hanning window
+    w(n+1) = 0.5 - 0.5*cos((2*%pi*n)/(N-1));
 
-// Plot Impulse Response
-subplot(2,1,1);
-plot(n, h, 'r');
-xlabel('n');
-ylabel('h(n)');
-title('Impulse Response of FIR Low Pass Filter using Hanning Window');
-grid on;
+    h(n+1) = hd(n+1)*w(n+1);
 
-// Frequency Response
-[H, f] = frmag(h, 512);      // Compute frequency response
-subplot(2,1,2);
-plot(f, abs(H));
-xlabel('Normalized Frequency');
-ylabel('|H(f)|');
-title('Magnitude Response of FIR Low Pass Filter');
-grid on;
+end
+
+[H,f] = frmag(h,256);
+
+subplot(2,1,1)
+plot2d(f/%pi,H)
+title("Magnitude Response LPF (Hanning Window)")
+
+subplot(2,1,2)
+plot2d(f/%pi,20*log10(H))
+title("Magnitude Response in dB")
+
+```
+# HPF
+```
+clc;
+clear;
+close;
+
+N=input("Enter filter length = ");
+Wc=input("Enter cutoff frequency = ");
+
+alpha=(N-1)/2;
+
+for n=0:N-1
+    
+    if n==alpha then
+        hd(n+1)=1-Wc/%pi;
+    else
+        hd(n+1)=-sin(Wc*(n-alpha))/(%pi*(n-alpha));
+    end
+    
+    w(n+1)=0.5-0.5*cos((2*%pi*n)/(N-1));
+    h(n+1)=hd(n+1)*w(n+1);
+
+end
+
+[H,f]=frmag(h,256);
+
+subplot(2,1,1)
+plot2d(f/%pi,H)
+title("HPF Magnitude Response")
+
+subplot(2,1,2)
+plot2d(f/%pi,20*log10(H))
+title("HPF Magnitude in dB")
+
+```
+# BPF
+```
+clc;
+clear;
+close;
+
+N=input("Enter filter length = ");
+Wc1=input("Enter lower cutoff frequency = ");
+Wc2=input("Enter upper cutoff frequency = ");
+
+alpha=(N-1)/2;
+
+for n=0:N-1
+    
+    if n==alpha then
+        hd(n+1)=(Wc2-Wc1)/%pi;
+    else
+        hd(n+1)=(sin(Wc2*(n-alpha))-sin(Wc1*(n-alpha)))/(%pi*(n-alpha));
+    end
+    
+    w(n+1)=0.5-0.5*cos((2*%pi*n)/(N-1));
+    h(n+1)=hd(n+1)*w(n+1);
+
+end
+
+[H,f]=frmag(h,256);
+
+subplot(2,1,1)
+plot2d(f/%pi,H)
+title("BPF Magnitude Response")
+
+subplot(2,1,2)
+plot2d(f/%pi,20*log10(H))
+title("BPF Magnitude in dB")
+
+```
+# BSF
+```
+
+clc;
+clear;
+close;
+
+N=input("Enter filter length = ");
+Wc1=input("Enter lower cutoff frequency = ");
+Wc2=input("Enter upper cutoff frequency = ");
+
+alpha=(N-1)/2;
+
+for n=0:N-1
+    
+    if n==alpha then
+        hd(n+1)=1-(Wc2-Wc1)/%pi;
+    else
+        hd(n+1)=(sin(Wc1*(n-alpha))-sin(Wc2*(n-alpha)))/(%pi*(n-alpha));
+    end
+    
+    w(n+1)=0.5-0.5*cos((2*%pi*n)/(N-1));
+    h(n+1)=hd(n+1)*w(n+1);
+
+end
+
+[H,f]=frmag(h,256);
+
+subplot(2,1,1)
+plot2d(f/%pi,H)
+title("BSF Magnitude Response")
+
+subplot(2,1,2)
+plot2d(f/%pi,20*log10(H))
+title("BSF Magnitude in dB")
 
 ```
 
+
 # OUTPUT
-<img width="768" height="432" alt="image" src="https://github.com/user-attachments/assets/ac777a09-e980-4cd2-b2b0-a2b0881ba518" />
+<img width="607" height="133" alt="image" src="https://github.com/user-attachments/assets/0de849c1-d7ba-4322-8dd3-90b6a8b17ca9" />
+<img width="920" height="481" alt="image" src="https://github.com/user-attachments/assets/e8e5078e-89e2-42d6-bbd2-9be3ab58b6b7" />
+<img width="607" height="133" alt="image" src="https://github.com/user-attachments/assets/530739c2-4ec2-45bd-b678-b129183b8c9d" />
+<img width="1011" height="585" alt="image" src="https://github.com/user-attachments/assets/b5146598-4d6a-45ed-a2ef-6f0484bd2da7" />
+<img width="394" height="145" alt="image" src="https://github.com/user-attachments/assets/ec1a57ab-64a7-48f1-ac40-7ea176c2b891" />
+<img width="1013" height="554" alt="image" src="https://github.com/user-attachments/assets/7245c8f6-6344-4e91-bb0e-138257be105f" />
+<img width="406" height="157" alt="image" src="https://github.com/user-attachments/assets/8a2e97a2-9de7-43f6-97ff-4a9d6faf44d6" />
+<img width="1017" height="550" alt="image" src="https://github.com/user-attachments/assets/23da0a09-d63d-4cbc-a231-29a7a0479e38" />
+
+
+
+
+
+
+
 
 # RESULT
-Thus, the Low Pass FIR Digital Filter was successfully designed using the Hanning Window method in SCILAB.
-The impulse and frequency responses were plotted and verified to meet the low-pass characteristics.
